@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<style>
+  div{
+    text-align: center;
+    margin: 50px auto;
+    background: #DEB887;
+  }
+  canvas{
+    margin: 30px;
+  }
+</style>
+<body>
+<div>
+  <canvas id="canvas-box"></canvas>
+</div>
+</body>
+<script>
+    const canvasEle=document.getElementById('canvas-box');
+    const ctx=canvasEle.getContext('2d');
+    const itemSize=80;
+    const lineWidth=2;
+    const canvasWidth=(itemSize+lineWidth)*8+lineWidth;
+    const canvasHeight=(itemSize+lineWidth)*9+lineWidth;
+    canvasEle.parentElement.style.width=canvasWidth+60+'px';
+    canvasEle.width=canvasWidth;
+    canvasEle.height=canvasHeight;
+    ctx.lineWidth=2;
+    ctx.strokeStyle='#555';
+
+    //竖线
+    for(let i=0;i<10;i++){
+        ctx.moveTo(...convertCoordinate(i,0));
+        ctx.lineTo(...convertCoordinate(i,9));
+    }
+    //横线
+    for(let i=0;i<11;i++){
+        ctx.moveTo(...convertCoordinate(0,i));
+        ctx.lineTo(...convertCoordinate(10,i));
+    }
+    //4条斜线
+    let obliqueArr=[[3,0,5,2],[3,2,5,0],[3,9,5,7],[3,7,5,9]];
+    obliqueArr.forEach(item=>{
+        ctx.moveTo(...convertCoordinate(item[0],item[1]));
+        ctx.lineTo(...convertCoordinate(item[2],item[3]));
+    });
+    //4条斜线 结束
+
+    //炮
+    let cannonArr=[[1,2],[7,2],[1,7],[7,7]];
+    cannonArr.forEach(item=>{
+        drawPointer(...convertCoordinate(item[0],item[1]));
+    });
+    //兵 卒
+    let soldierArr=[[0,3],[2,3],[4,3],[6,3],[8,3],[0,6],[2,6],[4,6],[6,6],[8,6]];
+    soldierArr.forEach(item=>{
+        drawPointer(...convertCoordinate(item[0],item[1]));
+    });
+
+    ctx.stroke();
+
+    //转换坐标
+    function convertCoordinate(x,y){
+        return [(itemSize+lineWidth)*x+lineWidth/2,(itemSize+lineWidth)*y+lineWidth/2]
+    }
+
+    //绘制炮 或 兵  十字
+    function drawPointer(x,y) {
+        ctx.moveTo(x-15,y-5);
+        ctx.lineTo(x-5,y-5);
+        ctx.lineTo(x-5,y-15);
+
+
+        ctx.moveTo(x-15,y+5);
+        ctx.lineTo(x-5,y+5);
+        ctx.lineTo(x-5,y+15);
+
+        ctx.moveTo(x+15,y+5);
+        ctx.lineTo(x+5,y+5);
+        ctx.lineTo(x+5,y+15);
+
+        ctx.moveTo(x+15,y-5);
+        ctx.lineTo(x+5,y-5);
+        ctx.lineTo(x+5,y-15);
+
+    }
+
+
+    //楚河汉界
+    ctx.fillStyle='#DEB887';
+    let rectLeftTop=convertCoordinate(0,4);
+    ctx.fillRect(rectLeftTop[0]+1,rectLeftTop[1]+1,canvasWidth-4,itemSize);
+    ctx.fillStyle='#333';
+    ctx.font = 'bold 42px 楷体';
+    ctx.fillText('楚  河',...convertCoordinate(1.6,4.7));
+    ctx.fillText('漢  界',...convertCoordinate(4.8,4.7));
+</script>
+</html>
